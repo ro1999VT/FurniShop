@@ -1,0 +1,2 @@
+1;Crash;5;2;false;General;Ram an opponent at high speed
+2;Crush;8;3;false;General;Flatten opponent using your Furnimon's full body
