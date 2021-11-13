@@ -8,6 +8,8 @@ class Button
         this.height = bheight;
         this.curve = curve;
 
+        this.wasClicked = false;
+
         this.fill = fillVal;
         this.overFill = overFill;
         this.clickFill = clickFill;
@@ -21,12 +23,31 @@ class Button
         return (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height);
     }
 
+    clicked(reset=true)
+    {
+        if(reset)
+        {
+            if(this.wasClicked)
+            {
+                this.wasClicked = false;
+                return true
+            }
+            else
+                return false
+        }
+        else
+            return this.wasClicked;
+    }
+
     draw(fadeVal = 255)
     {
         if(this.mouseOver())
         {
             if(mouseIsPressed && mouseButton == LEFT)
+            {
                 fill(this.clickFill,fadeVal);
+                this.wasClicked = true;
+            }
             else
                 fill(this.overFill,fadeVal);
         }

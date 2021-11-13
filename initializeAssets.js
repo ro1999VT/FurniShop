@@ -45,8 +45,9 @@ function readTextFile(file, type)
 function initializeAssets()
 { 
   assets.insert('Background-Battle_1', loadImage('Assets/Images/Backgrounds/background6.png'));
-
   assets.insert('BattleGround-Ground_1', loadImage('Assets/Images/Ground/groundOne.png'));
+
+  assets.insert('Icon-Info_1', loadImage('Assets/Images/Icons/infoIcon.png'));
 
   assets.insert('Icon-Box_1', loadImage('Assets/Images/Icons/boxIcon.png'));
   assets.insert('Icon-Attack_1', loadImage('Assets/Images/Icons/attackIcon.png'));

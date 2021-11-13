@@ -10,7 +10,8 @@ const TitleUITimers = {
     SceneThree_One : 7,
     SceneThree_Pause_2 : 8,
     SceneThree_Two : 9,
-    End : 10
+    SceneThree_Pause_3 : 10,
+    End : 11
 }
 
 const TitleUIStates = {
@@ -22,12 +23,12 @@ class TitleUI extends BaseUI
 { 
     constructor()
     {
-        let animStarts   = [0,0,0,0,0,0,0,0,0,0]
-        let maxAnimTimer = [120,100,100,40,60,300,60,100,60,300]
-        let startTimers  = [true,false,false,false,false,false,false,false,false,false];
-        let timerTypes   = [0,0,0,0,0,0,0,0,0,0]
-        let operation    = [true,true,true,true,true,true,true,true,true,true];
-        let tick         = [1,1,1,1,1,1,1,1,1,1];
+        let animStarts   = [0,0,0,0,0,0,0,0,0,0,0]
+        let maxAnimTimer = [120,100,100,40,60,300,60,100,60,300,100]
+        let startTimers  = [true,false,false,false,false,false,false,false,false,false,false];
+        let timerTypes   = [0,0,0,0,0,0,0,0,0,0,0]
+        let operation    = [true,true,true,true,true,true,true,true,true,true,true];
+        let tick         = [1,1,1,1,1,1,1,1,1,1,1];
         super(animStarts, maxAnimTimer, startTimers, timerTypes, operation, tick)
 
         this.currentState = TitleUIStates.Anim;
@@ -57,6 +58,8 @@ class TitleUI extends BaseUI
                 text('© 2021   Rohit Selvam\n\t\t\t\t\t\t\t Malhar Gate', 200, 200)
                 break;
             case TitleUITimers.SceneOne:
+                if (!currentSong.isPlaying())
+                    currentSong.play();
                 background(this.getAnimVal(TitleUITimers.SceneOne))
                 break;
             case TitleUITimers.SceneTwo:
@@ -171,8 +174,13 @@ class TitleUI extends BaseUI
                 fill(0,map((this.getAnimVal(TitleUITimers.SceneThree_Two)-2)%div,0,div,0,255));
                 rect(0,0,width,height)
                 break; 
+            case TitleUITimers.SceneThree_Pause_3:
+                break;
             case TitleUITimers.End:
                 gameState = gameStates.Start
+                if (currentSong.isPlaying())
+                    currentSong.stop();
+                break;
             default:
                 break;
         }

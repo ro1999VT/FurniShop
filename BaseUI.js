@@ -21,6 +21,8 @@ class BaseUI
         this.lengthAnims = this.animTimers.length;
     }
 
+    screenClicked() { return (mouseIsPressed && mouseButton == LEFT); }
+
     runAnim(index, val = true) { this.startTimers[index] = val; }
 
     getAnimVal(index) { return this.animTimers[index]; }

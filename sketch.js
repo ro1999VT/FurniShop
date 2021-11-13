@@ -11,6 +11,7 @@ function preload()
 {
   assets = new AssetManager();
   initializeTracks();
+  initializeWorldTracks()
 }
 
 function setup() {
@@ -24,14 +25,17 @@ function setup() {
   moveList = [];
 
   initializeAssets();
-  UIVersions = [new TitleUI(), new StartUI(),0,0, new BattleUI(),0]
-  
+  initializeWorldAssets();
+
   createCanvas(700, 475);
+  UIVersions = [new TitleUI(), new StartUI(), new WorldUI(),0, new BattleUI(),0]
 
   newFont = loadFont('Assets/Fonts/pkmndp.ttf');
   textFont(newFont);
 
-  currentSong = assets.getConst('Track-Battle_1');
+  currentSong = assets.getConst('Track-Start_1');
+  currentSong.setVolume(0.1)
+  print(width,height)
 }
 
 function mouseClicked()
@@ -44,11 +48,12 @@ function mouseClicked()
 
   if(gameState == gameStates.Title)
     gameState = gameStates.Start;
+  
+  if (currentSong.isPlaying())
+    currentSong.stop();
 }
 
 function draw() {
-  //if (!currentSong.isPlaying())
-    //currentSong.play();
   UIVersions[gameState].display();
   if(showFPS)
   {

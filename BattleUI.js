@@ -101,7 +101,7 @@ class BattleUI extends BaseUI
                 this.bagButton.draw();
                 this.runButton.draw();
                 this.fightButton.draw();
-                this.charButton.draw();    
+                this.charButton.draw();
 
                 let flashText2 = this.getAnimVal(BattleUITimers.pulseText2)*6 + 40;
 
@@ -188,6 +188,9 @@ class BattleUI extends BaseUI
                 image(assets.getConst('Icon-Run_1'),554,416, 43,49.5);
 
                 tint(255);
+                                
+                if(this.runButton.clicked())
+                    gameState = gameStates.World;
             }
         }
         //rect(15,360-slideOff,180,50);

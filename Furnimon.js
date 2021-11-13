@@ -87,4 +87,4 @@ class Furnimon
             image(this.assets[1],x,y,this.size[0]*zoom,this.size[1]*zoom);
     }
 
-}
+} 
