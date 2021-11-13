@@ -35,7 +35,6 @@ function setup() {
 
   currentSong = assets.getConst('Track-Start_1');
   currentSong.setVolume(0.1)
-  print(width,height)
 }
 
 function mouseClicked()

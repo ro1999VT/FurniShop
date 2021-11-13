@@ -49,7 +49,6 @@ class StartUI extends BaseUI
             this.infoText.push(this.tempInfoText.substring(this.count,this.count+newIndex))
             this.count += newIndex;
         }
-        print(this.infoText)
     }
     
     readInfoFile()
@@ -63,7 +62,7 @@ class StartUI extends BaseUI
             {
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
-                    var allText = rawFile.responseText;
+                    var allText = Strign(rawFile.responseText);
                     textOut = allText;
                 }
             }

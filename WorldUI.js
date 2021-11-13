@@ -220,7 +220,6 @@ class Player{
 
         if(floor(px/20) != floor(ox/20)  || floor(py/20)  != floor(oy/20))
         {
-            print('newtile')
             if(this.enounterSteps > 0)
                 this.enounterSteps--;
         }
