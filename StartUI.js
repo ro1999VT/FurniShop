@@ -38,7 +38,7 @@ class StartUI extends BaseUI
 
         this.infoOpen = false;
 
-        this.tempInfoText = this.readInfoFile().replaceAll('\r\n', '');
+        this.tempInfoText = this.readInfoFile().replace(/\r\n/g,'');
         this.infoText = [];
         this.infoLineLen = 40;
         this.count = 0;
