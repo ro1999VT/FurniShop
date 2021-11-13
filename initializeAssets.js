@@ -59,5 +59,5 @@ function initializeAssets()
 
   // id, name, damage, cost, isSpecial, affinity, description
   moveList = readTextFile('Assets/Data/Moves/moves.txt', 'moves')
-  print(moveList)
+  //print(moveList)
 }
