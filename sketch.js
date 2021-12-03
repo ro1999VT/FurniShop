@@ -18,7 +18,7 @@ function setup() {
   // Initialization goes here
   frameRate(60);
   oldGameState = gameStates.Title;
-  gameState = gameStates.Title;
+  gameState = gameStates.Battle;
   globalSpeedMult = 1;
 
   showFPS = true;

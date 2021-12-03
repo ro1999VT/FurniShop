@@ -62,7 +62,7 @@ class StartUI extends BaseUI
             {
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
-                    var allText = Strign(rawFile.responseText);
+                    var allText = String(rawFile.responseText);
                     textOut = allText;
                 }
             }
