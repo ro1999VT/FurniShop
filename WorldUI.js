@@ -79,8 +79,8 @@ class WorldUI extends BaseUI
 
     display()
     {
-        background(248, 240, 227);
-
+        background(0);
+        noTint();
         this.worldMap.drawfloor(this);
         this.worldMap.drawmap(this);
     

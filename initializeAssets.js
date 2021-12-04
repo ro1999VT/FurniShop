@@ -1,3 +1,27 @@
+/*
+Affinities:
+
+Space (Contain)
+Hold (Suspend)
+Soft
+Flexible
+Force
+Reflect
+Heat
+Fire
+Cool
+Light
+Absorb
+Liquid
+Time
+Air
+Metal
+Wood
+Plastic
+Electric
+
+*/
+
 function readTextFile(file, type)
 {
   textOut = [];
@@ -13,26 +37,36 @@ function readTextFile(file, type)
         tempArr = allText.split('\r\n');
         if(type == 'moves')
         {
-          for (let i = 0; i < tempArr.length; i++)
+          for (let i = 1; i < tempArr.length; i++)
           {
             temp = tempArr[i].split(';');
             temp[0] = int(temp[0]);
             temp[2] = int(temp[2]);
             temp[3] = int(temp[3]);
-            temp[4] = temp[4] == 'true';
             textOut.push(new Move(temp));
           }
         }
         else if(type == 'furnimon')
         {
-          for (let i = 0; i < tempArr.length; i++)
+          // id, name, hp, attack, special attack, defense, special defense, speed, accuracy, max energy, weight (lbs), base experience, img width, img height, back width, back height
+          for (let i = 1; i < tempArr.length; i++)
           {
             temp = tempArr[i].split(';');
+            temp[12] = temp[12].split(',');
+            for(let j = 2; j <= 11; j++)
+              temp[j] = float(temp[j]);
+            for(let j = 13; j <= 16; j++)
+              temp[j] = int(temp[j]);
+
+            let x;
+            let y;
+            x = loadImage('Assets/Images/Furnimon/' + temp[0] + '.png', x => {}, (event) => { x = loadImage('Assets/Images/Furnimon/0.png') } );
+            y = loadImage('Assets/Images/Furnimon/' + temp[0] + '_1.png', y => {}, (event) => { y = loadImage('Assets/Images/Furnimon/0.png') } );
             temp[0] = int(temp[0]);
-            temp[2] = int(temp[2]);
-            temp[3] = int(temp[3]);
-            temp[4] = temp[4] == 'true';
-            textOut.push(new Move(temp));
+
+            //print(temp, temp[2] + temp[3] + temp[4] + temp[5] + temp[6] + temp[7], temp[9], temp[10])
+            textOut.push(new BaseFurnimon(temp[0], temp[1], new Stats(temp[2], temp[3], 
+                         temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10]), [x,y], temp[11], temp[12], [temp[13],temp[14],temp[15],temp[16]]));
           }
         }
       }
@@ -40,6 +74,23 @@ function readTextFile(file, type)
   }
   rawFile.send(null);
   return textOut;
+}
+
+function getRandomFurnimon(level)
+{
+  let base = random(furnimonList).copy()
+  //let check = false
+  //while(!check)
+  //{
+    // Check if legendary - implement and add to when adding legendaries
+  //}
+  let tempMoves = base.getValidMoveList()
+  let numMoves = min(random([1,2]) + random([0,1,2]), tempMoves.length)
+  let moves = []
+  shuffle(tempMoves, true)
+  for (let i = 0; i < numMoves; i++)
+    moves.push(moveList[tempMoves[i]])
+  return new Furnimon(base, level, moves)
 }
 
 function initializeAssets()
@@ -57,7 +108,9 @@ function initializeAssets()
   assets.insert('Anim-Gang_1', loadImage('Assets/Images/Animations/gang.png'));
   assets.insert('Character-Player_1', loadImage('Assets/Images/Players/Character/trainer.png'));
 
+
   // id, name, damage, cost, isSpecial, affinity, description
   moveList = readTextFile('Assets/Data/Moves/moves.txt', 'moves')
-  //print(moveList)
+  furnimonList = readTextFile('Assets/Data/Furnimon/furnimon.txt', 'furnimon')
+  print(furnimonList)
 }
