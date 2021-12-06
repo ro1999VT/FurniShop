@@ -57,7 +57,6 @@ function readTextFile(file, type)
               temp[j] = float(temp[j]);
             for(let j = 13; j <= 16; j++)
               temp[j] = int(temp[j]);
-
             let x;
             let y;
             x = loadImage('Assets/Images/Furnimon/' + temp[0] + '.png', x => {}, (event) => { x = loadImage('Assets/Images/Furnimon/0.png') } );
@@ -76,17 +75,33 @@ function readTextFile(file, type)
   return textOut;
 }
 
-function getRandomFurnimon(level)
+function getRandomFurnimon(level, index = null)
 {
-  let base = random(furnimonList).copy()
-  //let check = false
-  //while(!check)
-  //{
+  let base = 0;
+  if (index == null)
+  {
+    base = random(furnimonList).copy()
     // Check if legendary - implement and add to when adding legendaries
-  //}
+    while(base.id >= 1000)
+      base = random(furnimonList).copy()
+  }
+  else
+    base = furnimonList[index].copy()
   let tempMoves = base.getValidMoveList()
-  let numMoves = min(random([1,2]) + random([0,1,2]), tempMoves.length)
+  let numMoves = min(2 + random([0,1,2]), tempMoves.length)
   let moves = []
+  shuffle(tempMoves, true)
+  for (let i = 0; i < numMoves; i++)
+    moves.push(moveList[tempMoves[i]])
+  return new Furnimon(base, level, moves)
+}
+
+function getLegendary(level=100, id=1000)
+{
+  base = furnimonList[furnimonList.length-1].copy()
+  let moves = [moveList[moveList.length-2], moveList[moveList.length-1]]
+  let tempMoves = base.getValidMoveList()
+  let numMoves = 2
   shuffle(tempMoves, true)
   for (let i = 0; i < numMoves; i++)
     moves.push(moveList[tempMoves[i]])

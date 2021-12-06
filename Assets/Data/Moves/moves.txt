@@ -2,6 +2,14 @@ id, name, damage, cost, affinity, description
 0;None;0;0;None;___
 1;Crash;5;2;General;Ram an opponent at high speed
 2;Flatten;8;3;General;Charge opponent using your Furnimon's full body
-3;Destroy;20;18;General;Use a massive amount of energy to decimate your opponent
-4;Illuminate;6;4;Light;Use light to damage and blind your opponent
-5;Discharge;8;8;Electric;Damage your oppnent using an electric current
+3;Destroy;15;15;General;Use a massive amount of energy to decimate your opponent
+4;Final Impact;45;25;General;Strike at your opponent with no restraint and take damage as a result
+5;Illuminate;6;4;Light;Use light to damage and blind your opponent
+6;Shine;10;6;Light;A powerful blast of light to damage and blind opponents
+7;Discharge;8;8;Electric;Damage your oppnent using an electric current
+8;Overload;40;50;Electric;Deals massive damage, but uses tons of energy and causes some recoil damage
+9;Warm;5;10;Heat;Heats up surroundings, deals damage and increases attack
+10;Ingrain;0;15;Wood;Heal 50% of your Furnimon's total health
+11;Toe Stub;0;0;Hold;Causes Pain and restores accuracy
+1000;Turbo Slice;150;100;Air;Use air to slice oppnents in half
+1001;Steel Scythe;120;50;Metal;Use blades to cut opponents down to size

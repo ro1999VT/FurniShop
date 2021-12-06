@@ -18,13 +18,15 @@ function setup() {
   // Initialization goes here
   frameRate(60);
   oldGameState = gameStates.Title;
-  gameState = gameStates.Battle;
+  gameState = gameStates.Title;
   globalSpeedMult = 1;
 
   restoreStatsAfterBattle = true;
 
   showFPS = true;
   moveList = [];
+
+  encounterLegendary  = false;
 
   initializeAssets();
   initializeWorldAssets();
@@ -71,13 +73,19 @@ function draw() {
       UIVersions[gameStates.Battle] = new BattleUI()
       textFont(newFont);
     }
+    if(gameState == gameStates.Battle)
+    {
+      UIVersions[gameStates.Battle] = new BattleUI()
+    }
   }
 
   if(showFPS)
   {
+    push();
     textSize(10);
     fill(255);
     textStyle(NORMAL);
     text('FPS: ' + round(frameRate(),2), 0, 10)
+    pop();
   }
 }

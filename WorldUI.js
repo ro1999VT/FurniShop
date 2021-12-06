@@ -58,11 +58,32 @@ class WorldUI extends BaseUI
         this.T = assets.getConst('T');
         this.b = assets.getConst('b');
         this.l = assets.getConst('l');
-
+        this.r = assets.getConst('r');
+        this.R = assets.getConst('R');
+        this.k = assets.getConst('k')
+        this.K = assets.getConst('K')
+        this.B = assets.getConst('B');
+        this.o = assets.getConst('o');
+        //Front
         this.mc1 = assets.getConst('mc1');
+        this.mc12 = assets.getConst('mc12');
+        this.mc13 = assets.getConst('mc13');
+        this.front = [this.mc1,this.mc12,this.mc1, this.mc13]
+        //Back
         this.mc2 = assets.getConst('mc2');
+        this.mc22 = assets.getConst('mc22');
+        this.mc23 = assets.getConst('mc23');
+        this.back = [this.mc2, this.mc22, this.mc2, this.mc23]
+        //Left
         this.mc3 = assets.getConst('mc3');
+        this.mc32 = assets.getConst('mc32');
+        this.mc33 = assets.getConst('mc33');
+        this.left = [this.mc3, this.mc32, this.mc3, this.mc33]
+        //Right
         this.mc4 = assets.getConst('mc4');
+        this.mc42 = assets.getConst('mc42');
+        this.mc43 = assets.getConst('mc43');
+        this.right = [this.mc4, this.mc42, this.mc4, this.mc43]
 
 
         this.stepsound = assets.getConst('Track-StepSound');
@@ -82,9 +103,12 @@ class WorldUI extends BaseUI
         background(0);
         noTint();
         this.worldMap.drawfloor(this);
+        
         this.worldMap.drawmap(this);
-    
+
         this.player.draw(this);
+    
+        
     }
 }
   
@@ -133,6 +157,18 @@ class WorldMap
                     break;
                     case 'l' : image(thisUI.l,j*20-px, i*20-py, 100,50)
                     break;
+                    case 'r' : image(thisUI.r, j*20-px, i*20-py, 100,100)
+                    break;
+                    case 'R' : image(thisUI.R, j*20-px, i*20-py, 100,100)
+                    break;
+                    case 'k' : image(thisUI.k, j*20-px, i*20-py, 200,50)
+                    break;
+                    case 'K' : image(thisUI.K, j*20-px, i*20-py, 200,50)
+                    break;
+                    case 'B' : image(thisUI.B, j*20-px, i*20-py, 400,200)
+                    break;
+                    case 'o' : image(thisUI.o, j*20-px, i*20-py, 400,200)
+                    break;
                 }
             }
         }
@@ -155,10 +191,21 @@ class WorldMap
                             fill(200)
                             rect(j*20-px, i*20-py,20,20)
                             break;
+                    case 'F': 
+                            stroke(100)
+                            fill(105,105,105)
+                            rect(j*20-px, i*20-py,20,20)
+                            break;
                     case 'w': stroke(100)
                             fill(186, 140, 99)
                             rect(j*20-px, i*20-py,20,20)
                             break;
+                    case 'e': 
+                            noStroke()
+                            fill(139,0,0)
+                            rect(j*20-px, i*20-py,20,20)
+                            break;
+ 
                 }
             }
         }
@@ -187,6 +234,10 @@ class Player{
         this.halfsize = [this.size[0]/2, this.size[1]/2]
         this.maxEncounterSteps = 15;
         this.enounterSteps = this.maxEncounterSteps;
+        this.steps=0;
+        this.maxsteps = 10;
+        this.walkindex =0;
+        
     }
 
     draw(thisUI)
@@ -199,39 +250,71 @@ class Player{
         noStroke()
         noFill()
         rect(px,py,20,30) 
-        if (keyIsDown(UP_ARROW))
+        let pressed = false;
+        if (keyIsDown(UP_ARROW)|| keyIsDown(87))
         { 
+            pressed = true;
             py = py - this.speed;   //Moves CHaracter
             this.orientation = movement.UP; //Draw Character Facing a particular direction
         }
-        else if(keyIsDown(DOWN_ARROW))
+        else if(keyIsDown(DOWN_ARROW)|| keyIsDown(83))
         { 
+            pressed = true;
             py = py + this.speed;
             this.orientation = movement.DOWN;
         }
-        if (keyIsDown(LEFT_ARROW)){ 
+        if (keyIsDown(LEFT_ARROW)|| keyIsDown(65)){ 
+            pressed = true;
             px = px - this.speed;
             this.orientation = movement.LEFT;
         }
-        else if (keyIsDown(RIGHT_ARROW)){
+        else if (keyIsDown(RIGHT_ARROW)|| keyIsDown(68)){
+            pressed = true;
             px = px + this.speed;
             this.orientation = movement.RIGHT;
         }
-
+        
         if(floor(px/20) != floor(ox/20)  || floor(py/20)  != floor(oy/20))
         {
-            if(this.enounterSteps > 0)
+            if(this.enounterSteps > 0 && (this.checkFloor() || this.checkLegendary()))
                 this.enounterSteps--;
         }
+        
+        var currentimage;
 
-        if(this.orientation == movement.DOWN || this.orientation == movement.NONE)
-        image(thisUI.mc1,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
-        else if(this.orientation == movement.UP)
-        image(thisUI.mc2,width/2 -this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
-        else if(this.orientation == movement.LEFT)
-        image(thisUI.mc3,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
-        else if(this.orientation == movement.RIGHT)
-        image(thisUI.mc4,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
+        if(pressed){
+            this.steps += 1;
+            if(this.steps >= this.maxsteps){
+                this.steps=0;
+                this.walkindex+=1;
+                if(this.walkindex >3){
+                    this.walkindex=0;
+                }
+            }
+            
+        }
+        else {
+            this.steps=0;
+            this.walkindex=0;
+        }
+
+        if(this.orientation == movement.DOWN || this.orientation == movement.NONE){
+            currentimage= thisUI.front[this.walkindex]   
+            image(currentimage,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
+        }
+        else if(this.orientation == movement.UP){
+            currentimage= thisUI.back[this.walkindex] 
+            image(currentimage,width/2 -this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]); 
+        }
+        else if(this.orientation == movement.LEFT){
+            currentimage= thisUI.left[this.walkindex] 
+            image(currentimage,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
+        }
+        else if(this.orientation == movement.RIGHT){
+            currentimage= thisUI.right[this.walkindex] 
+            image(currentimage,width/2-this.halfsize[0],height/2-this.halfsize[1],this.size[0],this.size[1]);
+        }
+        
 
         if(this.collision())
         {
@@ -274,12 +357,22 @@ class Player{
                 this.playStep = false;
                 thisUI.stepsound.stop();
                 this.enounterSteps = this.maxEncounterSteps;
+                encounterLegendary = false;
+                gameState = gameStates.Battle;
+            }
+
+            if(this.checkLegendary() && this.randomEnounter(thisUI))
+            {
+                this.playStep = false;
+                thisUI.stepsound.stop();
+                this.enounterSteps = this.maxEncounterSteps;
+                encounterLegendary = true;
                 gameState = gameStates.Battle;
             }
         }   
     }
 
-    //Function to Detect COllision with objects in Map
+    //Function to Detect COllisi on with objects in Map
     collision()
     {
     for (let i = 0.1; i <= 0.9; i += 0.8)
@@ -309,7 +402,25 @@ class Player{
                 let yNum = floor((py + height/2)/20 + j);
                 if (xNum >= 0 && xNum < floormap[0].length && yNum >= 0 && yNum < floormap.length)
                 {
-                if (floormap[yNum][xNum] == 'c')
+                if (floormap[yNum][xNum] == 'c' || floormap[yNum][xNum] == 'e')
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    checkLegendary()
+    {
+        for (let i = 0.1; i <= 0.9; i += 0.8)
+        {
+            for (let j = 0.1; j <= 0.9; j += 0.8)
+            {
+                let xNum = floor((px + width/2)/20 + i);
+                let yNum = floor((py + height/2)/20 + j);
+                if (xNum >= 0 && xNum < floormap[0].length && yNum >= 0 && yNum < floormap.length)
+                {
+                if (floormap[yNum][xNum] == 'F')
                     return true;
                 }
             }

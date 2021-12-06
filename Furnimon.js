@@ -39,8 +39,32 @@ class Move
     {
         if(this.id == 4)
         {
-            affected.base.battleStats.accuracy -= affected.base.currentStats.accuracy*0.1
+            caster.base.battleStats.hp -= round(caster.base.currentStats.hp*0.5)
+            if (caster.base.battleStats.hp < 0)
+                caster.base.battleStats.hp = 0;
         }
+        if(this.id == 5)
+            affected.base.battleStats.accuracy -= affected.base.currentStats.accuracy*0.1
+        if(this.id == 6)
+            affected.base.battleStats.accuracy -= affected.base.currentStats.accuracy*0.15
+        if(this.id == 8)
+        {
+            caster.base.battleStats.hp -= round(caster.base.currentStats.hp*0.25)
+            if (caster.base.battleStats.hp < 0)
+                caster.base.battleStats.hp = 0;
+        }
+        if(this.id == 9)
+        {
+            caster.base.battleStats.attack += caster.base.currentStats.attack*0.25
+        }
+        if(this.id == 10)
+        {
+            caster.base.battleStats.hp += round(caster.base.currentStats.hp*0.5)
+            if (caster.base.battleStats.hp > caster.base.currentStats.hp)
+                caster.base.battleStats.hp = caster.base.currentStats.hp;
+        }
+        if(this.id == 11)
+            caster.base.battleStats.accuracy = caster.base.currentStats.accuracy
     }
 }
 
@@ -124,7 +148,7 @@ class BaseFurnimon
             for (let j = 0; j < this.affinities.length; j++)
             {
                 //print(moveList[i].affinity, this.affinities[j], moveList[i].affinity == this.affinities[j])
-                if(moveList[i].affinity == this.affinities[j])
+                if(moveList[i].affinity == this.affinities[j] && moveList[i].id < 1000)
                     temp.push(i)
             }
         }
@@ -175,24 +199,21 @@ class Furnimon
 
     calculateExpGain(enemyFurnimon, lose)
     {
-        print(this.currentExp, this.level)
         if(lose)
-            this.currentExp += (1 + (enemyFurnimon.base.baseStatTotal/1000))*(1 + (enemyFurnimon.base.currentStats.defense/300))*enemyFurnimon.base.currentStats.hp/4;
+            this.currentExp += (1 + (enemyFurnimon.base.baseStatTotal/1000))*(1 + (enemyFurnimon.base.currentStats.defense/300))*enemyFurnimon.base.currentStats.hp*15/4;
         else
-            this.currentExp += (1 + (enemyFurnimon.base.baseStatTotal/1000))*(1 + (enemyFurnimon.base.currentStats.defense/300))*enemyFurnimon.base.currentStats.hp;
-        print(this.currentExp, this.level)
+            this.currentExp += (1 + (enemyFurnimon.base.baseStatTotal/1000))*(1 + (enemyFurnimon.base.currentStats.defense/300))*enemyFurnimon.base.currentStats.hp*15;
         
         while (this.currentExp > this.currentMaxExp)
         {
             this.currentExp -= this.currentMaxExp;
             this.level += 1;
             this.setCurrentMaxExp();
-            this.base.currentStats.levelScaleAll(this.level, this.baseStats)
+            this.base.currentStats.levelScaleAll(this.level, this.base.baseStats)
         }
         if(this.currentExp < 0)
             this.currentExp = 0;
         this.restoreStats()
-        print(this.currentExp, this.level)
     }
 
     calculateDamage(enemyFurnimon, move, overwrite = true)
@@ -234,7 +255,7 @@ class Furnimon
         let message = ""
         let isMessage = false
 
-        print(damage, move.name, move.damage, move.cost)
+        //print(damage, move.name, move.damage, move.cost)
 
         // special defense and acccuracy check
         if (thisStats.special_defense > damage)
@@ -248,7 +269,7 @@ class Furnimon
         {
             damage = 0
             isMessage = true
-            message  = String(this.getName()) + " missed!"
+            message  = String(enemyFurnimon.getName()) + " missed!"
         }
 
         if(overwrite)

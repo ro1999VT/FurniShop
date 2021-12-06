@@ -34,36 +34,27 @@ class BattleUI extends BaseUI
 
         this.wildBattle = wildBattle
 
-        textFont('Sans-Serif');
-
         this.buttonCurve = 30;
         this.bagButton = new Button(555,355,140,50,20,color(200));
         this.runButton = new Button(555,415,140,50,20,color(200));
         this.fightButton = new Button(405,355,140,50,20,color(200));
         this.charButton = new Button(405,415,140,50,20,color(200));
 
-        this.backButton = new Button(405,360,270,100,0,color(0,0,0,0));
-        this.fightOneButton = new Button(15,360,180,50,0,color(220),true,1,color(170));
-        this.fightTwoButton = new Button(195,360,180,50,0,color(220),true,1,color(170));
-        this.fightThreeButton = new Button(15,410,180,50,0,color(220),true,1,color(170));
-        this.fightFourButton = new Button(195,410,180,50,0,color(220),true,1,color(170));
-
         this.swapButton = new Button(205,400,140,50,20,color(200),true,1,color(170));
         this.noSwapButton =  new Button(355,400,140,50,20,color(200),true,1,color(170));
 
         this.fightUI = false
-            
+        print(encounterLegendary)
         if (enemy != null)
             this.enemyFurnimon = enemy;
+        else if (encounterLegendary)
+            this.enemyFurnimon = getLegendary();
         else
         {
             let level = int(currentFurnimon.level + random(-5,5) + random(-5,5))
-            print(level)
             if (level < 1)
                 level = 1
-            print(level)
             this.enemyFurnimon = getRandomFurnimon(level);
-            print(this.enemyFurnimon)
         }
         this.frenFurnimon =  currentFurnimon
         //this.frenFurnimon.base.battleStats.energy = 2
@@ -71,6 +62,17 @@ class BattleUI extends BaseUI
         this.enemyAI = new EnemyAI(this.enemyFurnimon, difficulty)
         this.moveCoords = [[35, 390], [215,390], [35, 440], [215, 440]]
         this.currentMove = -1;
+
+        let afftinityColors = new Map();
+        afftinityColors.set("Space", color(65,74,76)).set("General", color(220)).set("Heat", color(245,214,210)) 
+        afftinityColors.set("Electric", color(170,190,200)).set("Light", color(225,224,210)).set("None", color(220))
+        afftinityColors.set("Air", color(200,205,200))
+
+        this.backButton = new Button(405,360,270,100,0,color(0,0,0,0));
+        this.fightOneButton = new Button(15,360,180,50,0,(afftinityColors.get(this.frenFurnimon.getMove(0).affinity) || color(220)),true,1,color(170));
+        this.fightTwoButton = new Button(195,360,180,50,0,(afftinityColors.get(this.frenFurnimon.getMove(1).affinity) || color(220)),true,1,color(170));
+        this.fightThreeButton = new Button(15,410,180,50,0,(afftinityColors.get(this.frenFurnimon.getMove(2).affinity) || color(220)),true,1,color(170));
+        this.fightFourButton = new Button(195,410,180,50,0,(afftinityColors.get(this.frenFurnimon.getMove(3).affinity) || color(220)),true,1,color(170));
 
         this.fightAnimCount = 0;
         this.frenGoesFirst = false;
@@ -436,7 +438,7 @@ class BattleUI extends BaseUI
                         strokeWeight(4);
                         stroke(45);
                         textAlign(CENTER);
-                        text(move.name,this.moveCoords[i][0] + 70,this.moveCoords[i][1]);
+                        text(move.name,this.moveCoords[i][0] + 73,this.moveCoords[i][1]);
                         pop();
                         textSize(23);
                         strokeWeight(2);
@@ -450,7 +452,7 @@ class BattleUI extends BaseUI
                             fill(200,0,0);
                             stroke(130,0,0);
                         }
-                        text(move.cost,this.moveCoords[i][0] + 140,this.moveCoords[i][1] + 10);
+                        text(move.cost,this.moveCoords[i][0] + 135,this.moveCoords[i][1] + 10);
                         fill(200,0,0);
                         stroke(0);
                         strokeWeight(1);
@@ -471,14 +473,14 @@ class BattleUI extends BaseUI
                         stroke(35);
                         strokeWeight(4);
                         text(move.name,435,390)
-                        textSize(18);
+                        textSize(17);
                         fill(0);
                         strokeWeight(0);
 
                         let tempText = move.description
                         let descrText = []
                         let count = 0
-                        let lineLen = 30
+                        let lineLen = 33
                         while(count < tempText.length)
                         {
                             let newIndex = min(tempText.length - count, lineLen);
@@ -488,11 +490,11 @@ class BattleUI extends BaseUI
                         //text(,435,410)
                         for(let i = 0; i < descrText.length; i++)
                         {
-                            text(descrText[i], 435, 410 + i*18);
+                            text(descrText[i], 435, 410 + i*16);
                         }   
 
                         let energy = this.frenFurnimon.base.battleStats.energy
-                        textSize(18);
+                        textSize(16);
                         strokeWeight(1);
                         if(energy >= move.cost)
                         {
@@ -505,7 +507,7 @@ class BattleUI extends BaseUI
                             stroke(120,0,0);
                         }
                         text("Energy Cost: " + String(move.cost) + " (" + 
-                             String(energy) + " -> " + String(energy - move.cost) + ")", 435, 454);
+                             String(energy) + " -> " + String(energy - move.cost) + ")", 435, 456);
                         noButtons = false;
                         break;
                     }
@@ -528,7 +530,6 @@ class BattleUI extends BaseUI
                 threeVal = this.fightThreeButton.clicked();
                 fourVal = this.fightFourButton.clicked();
                 fightButtonVals = [oneVal, twoVal, threeVal, fourVal]
-                
 
                 if(this.animCompleted(BattleUITimers.buttonPress))
                 {
@@ -604,7 +605,7 @@ class BattleUI extends BaseUI
                     if (this.fightFadeIn)
                     {
                         this.fightFadeIn = false;
-                        print(this.frenGoesFirst, this.fightAnimCount)
+                        //print(this.frenGoesFirst, this.fightAnimCount)
                         if ((this.frenGoesFirst && this.fightAnimCount == 0) || (!this.frenGoesFirst && this.fightAnimCount == 1))
                             temp = this.enemyFurnimon.calculateDamage(this.frenFurnimon, this.frenFurnimon.moves[this.currentMove])
                         else
